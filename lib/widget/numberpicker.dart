@@ -377,8 +377,8 @@ class _ComplexAlarmState extends State<ComplexAlarm> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                    onPrimary: Colors.white,
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
                   ),
                   onPressed: _saveAlarm,
                   child: Text('Save Alarm'),

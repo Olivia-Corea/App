@@ -12,13 +12,19 @@ class AlarmPage extends StatefulWidget {
 }
 
 class _AlarmPageState extends State<AlarmPage> {
-  List<AlarmInfo> alarms = []; // 알람 목록을 저장할 리스트
+  late List<AlarmInfo> alarms;
+
+  @override
+  void initState() {
+    super.initState();
+    alarms = widget.alarms; // Initialize the alarms list with the provided data
+  }
 
   void _onAlarmSaved(AlarmInfo newAlarm) {
     setState(() {
-      alarms.add(newAlarm); // 새 알람을 목록에 추가
+      alarms.add(newAlarm); // Add the new alarm to the list
     });
-    // 여기에 알람 저장 로직을 추가할 수 있습니다.
+    // Additional alarm saving logic can be added here if needed
   }
 
   @override
@@ -27,7 +33,31 @@ class _AlarmPageState extends State<AlarmPage> {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          Spacer(), // 상단 공간을 유지하려면 이 줄을 추가하세요
+          Expanded(
+            child: alarms.isEmpty
+                ? Center(
+              child: Text(
+                'No Alarms',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            )
+                : ListView.builder(
+              itemCount: alarms.length,
+              itemBuilder: (context, index) {
+                final alarm = alarms[index];
+                return ListTile(
+                  title: Text(
+                    alarm.time,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  subtitle: Text(
+                    alarm.isActive ? 'Active' : 'Inactive',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                );
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Row(
@@ -56,14 +86,15 @@ class _AlarmPageState extends State<AlarmPage> {
               ],
             ),
           ),
-          // 여기에 알람 목록을 표시하는 위젯을 추가할 수 있습니다.
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ComplexAlarm()),
+            MaterialPageRoute(
+              builder: (context) => ComplexAlarm(onAlarmSaved: _onAlarmSaved),
+            ),
           );
         },
         child: Icon(Icons.add),
